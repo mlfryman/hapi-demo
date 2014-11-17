@@ -21,7 +21,7 @@ server.route({
     method: 'GET',
     path: '/{name}',
     handler: function (request, reply) {
-        reply('Hello, ' + encodeURIComponent(request.params.name) + '!' + request.query.limit);
+        reply('Hello, ' + request.params.name + '!' + request.query.limit);
     },
     config: {
         description: 'this is the user name route',
