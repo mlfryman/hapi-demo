@@ -1,8 +1,21 @@
 var port = process.env.PORT;
+var db = process.env.DB;
 var Hapi = require('hapi');
 var Good = require('good');
 var Joi = require('joi');
 var server = new Hapi.Server(port);
+
+var mongoose = require('mongoose');
+mongoose.connect('db');
+
+var Cat = mongoose.model('Cat', { name: String });
+
+var kitty = new Cat({ name: 'Zildjian' });
+kitty.save(function (err) {
+    if (err) // ...
+        console.log('meow');
+});
+
 
 server.route({
     config: {
@@ -48,6 +61,14 @@ server.route({
     }
 });
 
+server.route({
+    method: 'POST',
+    path: '/dogs',
+    handler: function(request, reply){
+        reply(request.payload);
+    }
+});
+
 server.pack.register(
     [
         {
@@ -68,5 +89,6 @@ server.pack.register(
         server.start(function () {
             server.log('info', 'Server running at: ' + server.info.uri);
         });
-    });
+    }
+);
 
