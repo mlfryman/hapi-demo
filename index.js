@@ -6,15 +6,15 @@ var Joi = require('joi');
 var server = new Hapi.Server(port);
 
 var mongoose = require('mongoose');
-mongoose.connect('db');
+mongoose.connect(db);
 
-var Cat = mongoose.model('Cat', { name: String });
+var Cat = mongoose.model('Cat', { name: String, age: Number, gender: String });
 
-var kitty = new Cat({ name: 'Zildjian' });
-kitty.save(function (err) {
-    if (err) // ...
-        console.log('meow');
-});
+//var kitty = new Cat({ name: 'Vladimir' });
+//kitty.save(function (err) {
+//    if (err) // ...
+//        console.log('meow');
+//});
 
 
 server.route({
@@ -63,9 +63,12 @@ server.route({
 
 server.route({
     method: 'POST',
-    path: '/dogs',
-    handler: function(request, reply){
-        reply(request.payload);
+    path: '/cats',
+    handler: function(request, reply) {
+        var kitty = new Cat(request.payload);
+        kitty.save(function () {
+            reply(kitty);
+        });
     }
 });
 
